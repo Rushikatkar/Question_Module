@@ -1,0 +1,61 @@
+﻿@model Question_Module.Models.QuestionViewModel
+
+@{
+    ViewData["Title"] = "Question Details";
+}
+
+<h2>Question Details</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Question ID</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Question Text</th>
+        <td>@Model.QuestionText</td>
+    </tr>
+    <tr>
+        <th>Question Type</th>
+        <td>@(Model.QuestionType == 0 ? "MCQ" : Model.QuestionType == 1 ? "True/False" : "Descriptive")</td>
+    </tr>
+    <tr>
+        <th>Marks</th>
+        <td>@Model.Marks</td>
+    </tr>
+    <tr>
+        <th>Difficulty</th>
+        <td>@Model.DifficultyLevel</td>
+    </tr>
+    <tr>
+        <th>Subject ID</th>
+        <td>@Model.TopicId</td>
+    </tr>
+    <tr>
+        <th>Model Answer</th>
+        <td>@(string.IsNullOrEmpty(Model.ModelAnswer) ? "N/A" : Model.ModelAnswer)</td>
+    </tr>
+    <tr>
+        <th>Options</th>
+        <td>
+            @if (Model.Options != null && Model.Options.Count > 0)
+            {
+                <ul>
+                    @foreach (var option in Model.Options)
+                    {
+                        <li>@option.OptionText (@(option.IsCorrect ? "Correct" : "Incorrect"))</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No options available</p>
+            }
+        </td>
+    </tr>
+</table>
+
+<a href="@Url.Action("Index", "Question")" class="btn btn-primary">Back to List</a>
+
+
+

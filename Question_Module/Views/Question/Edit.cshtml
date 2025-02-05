@@ -1,0 +1,109 @@
+﻿@* @model Question_Module.Models.QuestionViewModel
+
+@{
+    ViewData["Title"] = "Edit Question";
+}
+
+<h2>Edit Question</h2>
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="QuestionText">Question Text</label>
+        <input asp-for="QuestionText" class="form-control" />
+        <span asp-validation-for="QuestionText" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QuestionType">Question Type</label>
+        <select asp-for="QuestionType" class="form-control">
+            <option value="MCQ" selected="@((Model.QuestionType == "MCQ") ? "selected" : "")">MCQ</option>
+            <option value="TrueFalse" selected="@((Model.QuestionType == "TrueFalse") ? "selected" : "")">True/False</option>
+            <option value="Descriptive" selected="@((Model.QuestionType == "Descriptive") ? "selected" : "")">Descriptive</option>
+        </select>
+        <span asp-validation-for="QuestionType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Marks">Marks</label>
+        <input asp-for="Marks" class="form-control" type="number" min="1" />
+        <span asp-validation-for="Marks" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DifficultyLevel">Difficulty Level</label>
+        <select asp-for="DifficultyLevel" class="form-control">
+            <option value="Easy" selected="@((Model.DifficultyLevel == "Easy") ? "selected" : "")">Easy</option>
+            <option value="Medium" selected="@((Model.DifficultyLevel == "Medium") ? "selected" : "")">Medium</option>
+            <option value="Hard" selected="@((Model.DifficultyLevel == "Hard") ? "selected" : "")">Hard</option>
+        </select>
+        <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+    </div>
+
+    <!-- Categorization Section -->
+    <div class="form-group">
+        <label asp-for="Subject">Subject</label>
+        <input asp-for="Subject" class="form-control" />
+        <span asp-validation-for="Subject" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Topic">Topic</label>
+        <input asp-for="Topic" class="form-control" />
+        <span asp-validation-for="Topic" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Tags">Tags</label>
+        <input asp-for="Tags" class="form-control" placeholder="Comma separated tags" />
+        <span asp-validation-for="Tags" class="text-danger"></span>
+    </div>
+
+    <!-- MCQ Option Handling (Editable) -->
+    <div class="form-group" id="mcq-options">
+        <label>Options</label>
+        @for (int i = 0; i < Model.Options.Count; i++)
+        {
+            <div class="option-group">
+                <input type="text" class="form-control" name="Options[@i].OptionText" value="@Model.Options[i].OptionText" placeholder="Option Text" />
+                <input type="checkbox" name="Options[@i].IsCorrect" @(Model.Options[i].IsCorrect ? "checked" : "") /> Correct Answer
+            </div>
+        }
+    </div>
+    <button type="button" onclick="addMCQOption()" class="btn btn-secondary">Add Option</button>
+
+    <!-- Correct Answer for True/False and Descriptive Questions -->
+    <div class="form-group">
+        <label asp-for="CorrectAnswer">Correct Answer</label>
+        <div id="correct-answer-section">
+            @if (Model.QuestionType == "TrueFalse")
+            {
+                <select asp-for="CorrectAnswer" class="form-control">
+                    <option value="True" selected="@((Model.CorrectAnswer == "True") ? "selected" : "")">True</option>
+                    <option value="False" selected="@((Model.CorrectAnswer == "False") ? "selected" : "")">False</option>
+                </select>
+            }
+            else if (Model.QuestionType == "Descriptive")
+            {
+                <textarea asp-for="CorrectAnswer" class="form-control">@Model.CorrectAnswer</textarea>
+            }
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+<script>
+    let optionCount = @Model.Options.Count;
+
+    function addMCQOption() {
+        const optionsDiv = document.getElementById('mcq-options');
+        const newOption = document.createElement('div');
+        newOption.classList.add('option-group');
+        newOption.innerHTML = `
+                <input type="text" class="form-control" name="Options[${optionCount}].OptionText" placeholder="Option Text" />
+                <input type="checkbox" name="Options[${optionCount}].IsCorrect" /> Correct Answer
+            `;
+        optionsDiv.appendChild(newOption);
+        optionCount++;
+    }
+</script>
+ *@

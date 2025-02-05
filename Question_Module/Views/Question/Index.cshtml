@@ -1,0 +1,43 @@
+﻿@model List<Question_Module.Models.QuestionViewModel>
+
+<h2>Questions List</h2>
+<a href="@Url.Action("Create", "Question")" class="btn btn-primary">Create New Question</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Type</th>
+            <th>Marks</th>
+            <th>Difficulty</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.QuestionText</td>
+                <td>
+                    @{
+                        string questionTypeText = item.QuestionType switch
+                        {
+                            0 => "MCQ",
+                            1 => "True/False",
+                            2 => "Descriptive",
+                            _ => "Unknown"
+                        };
+                    }
+                    @questionTypeText
+                </td>
+                <td>@item.Marks</td>
+                <td>@item.DifficultyLevel</td>
+                <td>
+                    <a href="@Url.Action("Details", "Question", new { id = item.Id })" class="btn btn-success">Details</a>
+                    <a href="@Url.Action("Edit", "Question", new { id = item.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Delete", "Question", new { id = item.Id })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

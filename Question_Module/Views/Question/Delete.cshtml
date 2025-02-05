@@ -1,0 +1,30 @@
+﻿@model Question_Module.Models.QuestionViewModel
+
+@{
+    ViewData["Title"] = "Delete Question";
+}
+
+<h2>Delete Question</h2>
+<h4>Are you sure you want to delete this question?</h4>
+
+<div class="border p-3">
+    <dl class="row">
+        <dt class="col-sm-4">Question Text</dt>
+        <dd class="col-sm-8">@Model.QuestionText</dd>
+
+        <dt class="col-sm-4">Question Type</dt>
+        <dd class="col-sm-8">@Model.QuestionType</dd>
+
+        <dt class="col-sm-4">Marks</dt>
+        <dd class="col-sm-8">@Model.Marks</dd>
+
+        <dt class="col-sm-4">Difficulty Level</dt>
+        <dd class="col-sm-8">@Model.DifficultyLevel</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
