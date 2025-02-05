@@ -39,13 +39,42 @@ namespace Question_Module.Controllers
 
         }
 
-       
+
+        [HttpGet("details/{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{apiBaseUrl}/{id}");
+                if (!response.IsSuccessStatusCode) return View("Error");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var question = JsonConvert.DeserializeObject<QuestionViewModel>(responseContent);
+
+                if (question == null)
+                {
+                    return View("Error");  // Ensure the model is not null
+                }
+
+                return View(question);  // Pass the valid model to the view
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+                return View("Error");
+            }
+        }
 
 
         [HttpGet("create")]
         public IActionResult Create()
         {
-            return View();
+            var model = new QuestionViewModel
+            {
+                // Ensure Options is initialized as an empty list
+                Options = new List<OptionViewModel>()
+            };
+            return View(model);
         }
 
         [HttpPost("create")]

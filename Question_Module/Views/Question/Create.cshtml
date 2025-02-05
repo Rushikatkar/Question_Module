@@ -61,11 +61,21 @@
     <!-- MCQ Option Handling -->
     <div class="form-group" id="mcq-options">
         <label>Options</label>
-        @for (int i = 0; i < Model.Options.Count; i++)
+        @if (Model.Options != null && Model.Options.Count > 0)
+        {
+            for (int i = 0; i < Model.Options.Count; i++)
+            {
+                <div class="option-group">
+                    <input type="text" class="form-control" name="Options[@i].OptionText" value="@Model.Options[i].OptionText" placeholder="Option Text" />
+                    <input type="checkbox" name="Options[@i].IsCorrect" @(Model.Options[i].IsCorrect ? "checked" : "") /> Correct Answer
+                </div>
+            }
+        }
+        else
         {
             <div class="option-group">
-                <input type="text" class="form-control" name="Options[@i].OptionText" value="@Model.Options[i].OptionText" placeholder="Option Text" />
-                <input type="checkbox" name="Options[@i].IsCorrect" @(Model.Options[i].IsCorrect ? "checked" : "") /> Correct Answer
+                <input type="text" class="form-control" name="Options[0].OptionText" placeholder="Option Text" />
+                <input type="checkbox" name="Options[0].IsCorrect" /> Correct Answer
             </div>
         }
     </div>
@@ -94,9 +104,9 @@
         const newOption = document.createElement('div');
         newOption.classList.add('option-group');
         newOption.innerHTML = `
-                <input type="text" class="form-control" name="Options[${optionCount}].OptionText" placeholder="Option Text" />
-                <input type="checkbox" name="Options[${optionCount}].IsCorrect" /> Correct Answer
-            `;
+                    <input type="text" class="form-control" name="Options[${optionCount}].OptionText" placeholder="Option Text" />
+                    <input type="checkbox" name="Options[${optionCount}].IsCorrect" /> Correct Answer
+                `;
         optionsDiv.appendChild(newOption);
         optionCount++;
     }
