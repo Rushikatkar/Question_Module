@@ -1,4 +1,4 @@
-﻿@* @model Question_Module.Models.QuestionViewModel
+﻿@model Question_Module.Models.QuestionViewModel
 
 @{
     ViewData["Title"] = "Edit Question";
@@ -15,9 +15,9 @@
     <div class="form-group">
         <label asp-for="QuestionType">Question Type</label>
         <select asp-for="QuestionType" class="form-control">
-            <option value="MCQ" selected="@((Model.QuestionType == "MCQ") ? "selected" : "")">MCQ</option>
-            <option value="TrueFalse" selected="@((Model.QuestionType == "TrueFalse") ? "selected" : "")">True/False</option>
-            <option value="Descriptive" selected="@((Model.QuestionType == "Descriptive") ? "selected" : "")">Descriptive</option>
+            <option value="0" selected="@(Model.QuestionType == 0)">MCQ</option>
+            <option value="1" selected="@(Model.QuestionType == 1)">True/False</option>
+            <option value="2" selected="@(Model.QuestionType == 2)">Descriptive</option>
         </select>
         <span asp-validation-for="QuestionType" class="text-danger"></span>
     </div>
@@ -31,9 +31,9 @@
     <div class="form-group">
         <label asp-for="DifficultyLevel">Difficulty Level</label>
         <select asp-for="DifficultyLevel" class="form-control">
-            <option value="Easy" selected="@((Model.DifficultyLevel == "Easy") ? "selected" : "")">Easy</option>
-            <option value="Medium" selected="@((Model.DifficultyLevel == "Medium") ? "selected" : "")">Medium</option>
-            <option value="Hard" selected="@((Model.DifficultyLevel == "Hard") ? "selected" : "")">Hard</option>
+            <option value="Easy" selected="@(Model.DifficultyLevel == "Easy")">Easy</option>
+            <option value="Medium" selected="@(Model.DifficultyLevel == "Medium")">Medium</option>
+            <option value="Hard" selected="@(Model.DifficultyLevel == "Hard")">Hard</option>
         </select>
         <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
     </div>
@@ -60,11 +60,21 @@
     <!-- MCQ Option Handling (Editable) -->
     <div class="form-group" id="mcq-options">
         <label>Options</label>
-        @for (int i = 0; i < Model.Options.Count; i++)
+        @if (Model.Options != null && Model.Options.Count > 0)
+        {
+            for (int i = 0; i < Model.Options.Count; i++)
+            {
+                <div class="option-group">
+                    <input type="text" class="form-control" name="Options[@i].OptionText" value="@Model.Options[i].OptionText" placeholder="Option Text" />
+                    <input type="checkbox" name="Options[@i].IsCorrect" @(Model.Options[i].IsCorrect ? "checked" : "") /> Correct Answer
+                </div>
+            }
+        }
+        else
         {
             <div class="option-group">
-                <input type="text" class="form-control" name="Options[@i].OptionText" value="@Model.Options[i].OptionText" placeholder="Option Text" />
-                <input type="checkbox" name="Options[@i].IsCorrect" @(Model.Options[i].IsCorrect ? "checked" : "") /> Correct Answer
+                <input type="text" class="form-control" name="Options[0].OptionText" placeholder="Option Text" />
+                <input type="checkbox" name="Options[0].IsCorrect" /> Correct Answer
             </div>
         }
     </div>
@@ -74,16 +84,16 @@
     <div class="form-group">
         <label asp-for="CorrectAnswer">Correct Answer</label>
         <div id="correct-answer-section">
-            @if (Model.QuestionType == "TrueFalse")
+            @if (Model.QuestionType == 1) // True/False
             {
                 <select asp-for="CorrectAnswer" class="form-control">
-                    <option value="True" selected="@((Model.CorrectAnswer == "True") ? "selected" : "")">True</option>
-                    <option value="False" selected="@((Model.CorrectAnswer == "False") ? "selected" : "")">False</option>
+                    <option value="True" selected="@(Model.CorrectAnswer == true)">True</option>
+                    <option value="False" selected="@(Model.CorrectAnswer == false)">False</option>
                 </select>
             }
-            else if (Model.QuestionType == "Descriptive")
+            else if (Model.QuestionType == 2) // Descriptive
             {
-                <textarea asp-for="CorrectAnswer" class="form-control">@Model.CorrectAnswer</textarea>
+                <textarea asp-for="ModelAnswer" class="form-control">@Model.ModelAnswer</textarea>
             }
         </div>
     </div>
@@ -106,4 +116,3 @@
         optionCount++;
     }
 </script>
- *@
